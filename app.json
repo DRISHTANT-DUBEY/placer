@@ -1,1 +1,47 @@
-{"expo":{"name":"Placement HQ","slug":"placement-hq","scheme":"placementhq","version":"0.1.0","orientation":"default","userInterfaceStyle":"dark","experiments":{"baseUrl":"/placer"},"android":{"package":"com.placementhq.personal","permissions":["READ_CONTACTS","POST_NOTIFICATIONS"]},"web":{"name":"Placement HQ","shortName":"Placement HQ","bundler":"metro","display":"standalone","themeColor":"#0b1220","backgroundColor":"#0b1220"},"plugins":[["expo-contacts",{"contactsPermission":"Allow Placement HQ to select recruiter contacts."}],"expo-notifications","expo-router"]}}
+{
+  "expo": {
+    "name": "Placement HQ",
+    "slug": "placement-hq",
+    "scheme": "placementhq",
+    "version": "0.1.0",
+    "orientation": "default",
+    "userInterfaceStyle": "dark",
+    "experiments": {
+      "baseUrl": "/placer"
+    },
+    "android": {
+      "package": "com.placementhq.personal",
+      "permissions": [
+        "READ_CONTACTS",
+        "POST_NOTIFICATIONS",
+        "android.permission.READ_CONTACTS",
+        "android.permission.WRITE_CONTACTS"
+      ]
+    },
+    "web": {
+      "name": "Placement HQ",
+      "shortName": "Placement HQ",
+      "bundler": "metro",
+      "display": "standalone",
+      "themeColor": "#0b1220",
+      "backgroundColor": "#0b1220"
+    },
+    "plugins": [
+      [
+        "expo-contacts",
+        {
+          "contactsPermission": "Allow Placement HQ to select recruiter contacts."
+        }
+      ],
+      "expo-notifications",
+      "expo-router"
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "af2a9afe-e1f3-4eb1-9648-47a3902d2bd3"
+      }
+    },
+    "owner": "drishtant"
+  }
+}
