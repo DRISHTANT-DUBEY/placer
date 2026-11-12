@@ -1,5 +1,8 @@
 import { Platform } from 'react-native';
 import * as Notifications from 'expo-notifications';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 Notifications.setNotificationHandler({handleNotification:async()=>({shouldShowBanner:true,shouldShowList:true,shouldPlaySound:false,shouldSetBadge:false})});
 export async function scheduleFollowUpReminder(title:string,date:string){if(Platform.OS==='web')return null;const permission=await Notifications.requestPermissionsAsync();if(permission.status!=='granted')throw Error('Notifications permission was not granted.');const at=new Date(`${date}T09:00:00`);if(Number.isNaN(at.valueOf())||at<=new Date())return null;return Notifications.scheduleNotificationAsync({content:{title:'Placement HQ follow-up',body:title},trigger:{type:Notifications.SchedulableTriggerInputTypes.DATE,date:at}})}
+const WEAK_TOPIC_REMINDER='placement-hq-weak-topic-reminder';
+export async function scheduleWeakTopicReminder(topic:string){if(Platform.OS==='web')return null;const permission=await Notifications.requestPermissionsAsync();if(permission.status!=='granted')throw Error('Notifications permission was not granted.');const previous=await AsyncStorage.getItem(WEAK_TOPIC_REMINDER);if(previous)await Notifications.cancelScheduledNotificationAsync(previous).catch(()=>{});const id=await Notifications.scheduleNotificationAsync({content:{title:'Placement HQ daily revision',body:`Start with ${topic}, then complete today's DSA target.`},trigger:{type:Notifications.SchedulableTriggerInputTypes.DAILY,hour:8,minute:0}});await AsyncStorage.setItem(WEAK_TOPIC_REMINDER,id);return id}
