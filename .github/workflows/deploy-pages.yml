@@ -31,6 +31,7 @@ jobs:
         env:
           EXPO_PUBLIC_SUPABASE_URL: https://kmevydayxmbrioujqiza.supabase.co
           EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY: sb_publishable_O1jtsk8GOoBW4KHBz-bxHw_IiYjwZfU
+      - run: node scripts/prepare-pages.mjs
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

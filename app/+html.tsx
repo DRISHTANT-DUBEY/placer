@@ -1,3 +1,6 @@
 import { ScrollViewStyleReset } from 'expo-router/html';
 import type { PropsWithChildren } from 'react';
-export default function Root({ children }: PropsWithChildren) { return <html lang="en"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/><link rel="manifest" href="/manifest.json"/><meta name="theme-color" content="#0b1220"/><script dangerouslySetInnerHTML={{ __html: "if ('serviceWorker' in navigator) window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js'))" }}/><ScrollViewStyleReset /></head><body>{children}</body></html>; }
+
+export default function Root({ children }: PropsWithChildren) {
+  return <html lang="en"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/><link rel="manifest" href="./manifest.json"/><link rel="icon" href="./icon.svg" type="image/svg+xml"/><meta name="theme-color" content="#0b1220"/><script dangerouslySetInnerHTML={{ __html: "if ('serviceWorker' in navigator) window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js'))" }}/><ScrollViewStyleReset /></head><body>{children}</body></html>;
+}

@@ -1,6 +1,7 @@
 node_modules/
 .expo/
 dist/
+.playwright-mcp/
 .env
 supabase/.temp/
 .env.local
