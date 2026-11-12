@@ -2,7 +2,7 @@ import 'react-native-url-polyfill/auto';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AppState, Platform } from 'react-native';
 import { createClient } from '@supabase/supabase-js';
-import { flushQueuedMutations, queueMutation, SyncConflictError } from './offlineQueue';
+import { flushQueuedMutations, pendingConflicts, queueMutation, SyncConflictError } from './offlineQueue';
 
 const url=process.env.EXPO_PUBLIC_SUPABASE_URL, key=process.env.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 export const configured=Boolean(url&&key);
@@ -15,6 +15,7 @@ async function insertOrQueue(table:string,payload:Record<string,unknown>){const{
 async function updateOrQueue(table:string,id:string,payload:Record<string,unknown>,expectedUpdatedAt?:string){let query=client().from(table).update(payload).eq('id',id);if(expectedUpdatedAt)query=query.eq('updated_at',expectedUpdatedAt);const{data,error}=await query.select('id');if(!error&&data?.length)return;if(!error)throw new SyncConflictError();if(shouldQueue(error)){await queueMutation(table,'update',{id,...payload,__expectedUpdatedAt:expectedUpdatedAt??null});return}throw error}
 async function deleteOrQueue(table:string,id:string){const{error}=await client().from(table).delete().eq('id',id);if(!error)return;if(shouldQueue(error)){await queueMutation(table,'delete',{id});return}throw error}
 export async function flushOfflineQueue(){return flushQueuedMutations(async m=>{if(m.action==='insert'){const{error}=await client().from(m.table).insert(m.payload);if(error)throw error;return}const{id,__expectedUpdatedAt,...payload}=m.payload;if(m.action==='delete'){let query=client().from(m.table).delete().eq('id',id as string);if(typeof __expectedUpdatedAt==='string')query=query.eq('updated_at',__expectedUpdatedAt);const{data,error}=await query.select('id');if(error)throw error;if(!data?.length)throw new SyncConflictError();return}let query=client().from(m.table).update(payload).eq('id',id as string);if(typeof __expectedUpdatedAt==='string')query=query.eq('updated_at',__expectedUpdatedAt);const{data,error}=await query.select('id');if(error)throw error;if(!data?.length)throw new SyncConflictError()})}
+export { pendingConflicts };
 export async function householdId(){await ensureSession();const{data,error}=await client().from('household_members').select('household_id').limit(1).maybeSingle();if(error)throw error;return data?.household_id??null}
 export async function createPrivateSpace(){await ensureSession();const{data,error}=await client().rpc('create_household');if(error)throw error;const x=Array.isArray(data)?data[0]:data;return{id:x.household_id as string,code:x.pairing_code as string}}
 export async function joinPrivateSpace(code:string){await ensureSession();const{data,error}=await client().rpc('join_household',{code:code.trim()});if(error)throw error;return data as string}
